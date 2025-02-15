@@ -22,7 +22,7 @@ const WorkoutForm = () => {
 
     const workout = {title, load, reps}
 
-    const response = await fetch('http://192.168.21.131:4000/api/workouts', {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/workouts`, {
       method: 'POST',
       body: JSON.stringify(workout),
       headers: {

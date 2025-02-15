@@ -12,7 +12,7 @@ const Home = () => {
 
   useEffect(() => {
     const fetchWorkouts = async () => {
-      const response = await fetch('http://192.168.21.131:4000/api/workouts', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/workouts`, {
         headers: {'Authorization': `Bearer ${user.token}`},
       })
       const json = await response.json()

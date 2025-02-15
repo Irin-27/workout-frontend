@@ -10,7 +10,7 @@ export const useSignup = () => {
     setIsLoading(true)
     setError(null)
 
-    const response = await fetch('http://192.168.21.131:4000/api/user/signup', {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/signup`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({ email, password })
