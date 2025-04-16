@@ -180,26 +180,6 @@ nav {
   flex-wrap: wrap;
 }
 
-/* For mobile */
-@media (max-width: 767px) {
-  header .container {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  nav {
-    margin-top: 15px;
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  nav div {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-}
-
 nav a {
   margin-right: 10px;
   padding: 5px 0;
@@ -288,101 +268,47 @@ button:disabled {
 }
 
 /* Hamburger Menu - only visible on mobile */
-/* Hamburger Menu - only visible on mobile */
 .menu-toggle {
   display: none;
 }
 
+/* All mobile hamburger-related styling */
 @media (max-width: 767px) {
-  .menu-toggle {
-    display: block;
-    position: relative;
-    margin-left: auto;
-    margin-right: 10px;
-    z-index: 100; /* Ensure it's above other elements */
-    top: 0;
-  }
-
+  /* Header container styling */
   header .container {
-    flex-direction: row; /* Keep as row instead of column */
-    justify-content: space-between; /* Space between logo and hamburger */
-    align-items: center; /* Center vertically */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     flex-wrap: wrap;
     position: relative;
   }
 
-  nav {
-    flex-basis: 100%; /* Make nav take full width as a new row */
-    order: 3; /* Push it below the header and hamburger */
-    margin-top: 15px;
-    display: none;
+  /* Make the hamburger visible and positioned correctly */
+  .menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    margin-left: auto;
+    cursor: pointer;
+    z-index: 100;
   }
 
-  nav.active {
-    display: block;
-  }
-
-  /* Make sure the hamburger icon is visible */
+  /* This ensures the hamburger is vertically centered with the logo */
   .hamburger {
+    width: 30px;
+    height: 22px;
+    position: relative;
     display: block;
   }
-}
 
-.hamburger {
-  width: 30px;
-  height: 22px;
-  position: relative;
-}
-
-.hamburger span {
-  display: block;
-  position: absolute;
-  height: 3px;
-  width: 100%;
-  background: #333;
-  border-radius: 3px;
-  transition: all 0.3s ease;
-}
-
-.hamburger span:nth-child(1) {
-  top: 0;
-}
-
-.hamburger span:nth-child(2) {
-  top: 9px;
-}
-
-.hamburger span:nth-child(3) {
-  top: 18px;
-}
-
-.hamburger.open span:nth-child(1) {
-  transform: rotate(45deg);
-  top: 9px;
-}
-
-.hamburger.open span:nth-child(2) {
-  opacity: 0;
-}
-
-.hamburger.open span:nth-child(3) {
-  transform: rotate(-45deg);
-  top: 9px;
-}
-
-/* Show hamburger on mobile */
-/* Show hamburger on mobile */
-@media (max-width: 767px) {
-  header .container {
-    flex-direction: column;
-    align-items: flex-start;
-    position: relative;
-    padding-bottom: 0;
-  }
-
+  /* Nav behavior when collapsed/expanded */
   nav {
     display: none;
     width: 100%;
+    flex-basis: 100%;
+    order: 3;
     margin-top: 15px;
     background-color: #fff;
     padding: 10px 0;
@@ -415,14 +341,6 @@ button:disabled {
     word-break: break-all;
   }
 
-  .user-email {
-    word-break: break-all;
-    max-width: 100%;
-    display: inline-block;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-
   .logout-btn {
     margin: 8px auto !important;
     display: block;
@@ -436,4 +354,42 @@ button:disabled {
     text-align: center;
     width: 100%;
   }
+}
+
+/* Hamburger icon bars */
+.hamburger span {
+  display: block;
+  position: absolute;
+  height: 3px;
+  width: 100%;
+  background: #333;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.hamburger span:nth-child(1) {
+  top: 0;
+}
+
+.hamburger span:nth-child(2) {
+  top: 9px;
+}
+
+.hamburger span:nth-child(3) {
+  top: 18px;
+}
+
+/* Hamburger animation when open */
+.hamburger.open span:nth-child(1) {
+  transform: rotate(45deg);
+  top: 9px;
+}
+
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+  transform: rotate(-45deg);
+  top: 9px;
 }
