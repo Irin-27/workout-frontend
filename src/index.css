@@ -22,21 +22,24 @@ header {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+/* --- Global Container Style (Desktop and default) --- */
 header .container {
   max-width: 1400px;
   margin: 0 auto;
   padding: 10px 20px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: center; /* Vertically centers children */
+  justify-content: space-between; /* Spacing between logo and nav/menu */
   flex-wrap: wrap;
 }
 
+/* Links */
 header a {
   color: #333;
   text-decoration: none;
 }
 
+/* Page container for main pages */
 .pages {
   max-width: 1400px;
   padding: 20px;
@@ -44,7 +47,7 @@ header a {
   min-height: calc(100vh - 160px); /* Account for header and footer */
 }
 
-/* homepage */
+/* --- Homepage --- */
 .home {
   display: grid;
   grid-template-columns: 1fr;
@@ -67,6 +70,7 @@ header a {
   }
 }
 
+/* --- Workout Details --- */
 .workout-details {
   background: #fff;
   border-radius: 8px;
@@ -110,7 +114,7 @@ header a {
   background: #e0e0e0;
 }
 
-/* new workout form */
+/* --- Form Styles (New Workout, Login, Signup) --- */
 label,
 input {
   display: block;
@@ -161,6 +165,7 @@ input.error {
   border: 1px solid var(--error);
 }
 
+/* --- Footer --- */
 footer {
   text-align: center;
   margin: 40px auto 0;
@@ -172,7 +177,7 @@ footer {
   background: #fff;
 }
 
-/* navbar */
+/* --- Navbar --- */
 nav {
   display: flex;
   align-items: center;
@@ -180,26 +185,7 @@ nav {
   flex-wrap: wrap;
 }
 
-/* For mobile */
-@media (max-width: 767px) {
-  header .container {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  nav {
-    margin-top: 15px;
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  nav div {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-}
-
+/* Default nav links and styles */
 nav a {
   margin-right: 10px;
   padding: 5px 0;
@@ -240,7 +226,7 @@ nav button:hover {
   color: #fff;
 }
 
-/* auth forms */
+/* Auth forms specific for login and signup */
 form.signup,
 form.login {
   max-width: 400px;
@@ -276,119 +262,30 @@ button:disabled {
   color: #666;
 }
 
-/* Mobile Specific Adjustments */
-@media (max-width: 480px) {
-  .workout-details {
-    padding: 15px;
-  }
-
-  .workout-details h4 {
-    padding-right: 30px; /* Make room for the delete button */
-  }
-}
-
-/* Hamburger Menu - only visible on mobile */
-/* Hamburger Menu - only visible on mobile */
-.menu-toggle {
-  display: none;
-}
-
+/* --- Mobile Styles --- */
 @media (max-width: 767px) {
-  .menu-toggle {
-    display: flex;               /* use flex for alignment */
-    align-items: center;         /* vertical centering */
-    justify-content: center;     /* horizontal centering within its own bounds */
-    position: relative;
-    margin-left: auto;
-    margin-right: 10px;
-    height: 100%;                /* ensures it fills the parent's height */
-    z-index: 100;                /* ensure it's above other elements */
-  }
-}
-
-
+  /* Container adjustments for mobile:
+     Maintain a row for logo and menu toggle so they align properly.
+     The nav will be moved below as its own row. */
   header .container {
-    flex-direction: row; /* Keep as row instead of column */
-    justify-content: space-between; /* Space between logo and hamburger */
-    align-items: center; /* Center vertically */
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     flex-wrap: wrap;
-    position: relative;
-  }
-
-  nav {
-    flex-basis: 100%; /* Make nav take full width as a new row */
-    order: 3; /* Push it below the header and hamburger */
-    margin-top: 15px;
-    display: none;
-  }
-
-  nav.active {
-    display: block;
-  }
-
-  /* Make sure the hamburger icon is visible */
-  .hamburger {
-    position: relative; /* Added for proper absolute positioning of spans */
-    width: 30px;
-    height: 22px;
-    display: block;
-    margin: auto;
-  }
-}
-
-.hamburger span {
-  display: block;
-  position: absolute;
-  height: 3px;
-  width: 100%;
-  background: #333;
-  border-radius: 3px;
-  transition: transform 0.3s ease, opacity 0.3s ease, top 0.3s ease; /* Added top transition */
-}
-
-.hamburger span:nth-child(1) {
-  top: 0;
-}
-
-.hamburger span:nth-child(2) {
-  top: 9px;
-}
-
-.hamburger span:nth-child(3) {
-  top: 18px;
-}
-
-.hamburger.open span:nth-child(1) {
-  transform: rotate(45deg);
-  top: 9px;
-}
-
-.hamburger.open span:nth-child(2) {
-  opacity: 0;
-}
-
-.hamburger.open span:nth-child(3) {
-  transform: rotate(-45deg);
-  top: 9px;
-}
-
-/* Show hamburger on mobile */
-/* Show hamburger on mobile */
-@media (max-width: 767px) {
-  header .container {
-    flex-direction: column;
-    align-items: flex-start;
     position: relative;
     padding-bottom: 0;
   }
 
+  /* Navigation: hidden by default and toggled active */
   nav {
-    display: none;
-    width: 100%;
+    flex-basis: 100%;
+    order: 3; /* Positioned after the header row */
     margin-top: 15px;
+    width: 100%;
     background-color: #fff;
     padding: 10px 0;
     box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+    display: none;
   }
 
   nav.active {
@@ -417,14 +314,6 @@ button:disabled {
     word-break: break-all;
   }
 
-  .user-email {
-    word-break: break-all;
-    max-width: 100%;
-    display: inline-block;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-
   .logout-btn {
     margin: 8px auto !important;
     display: block;
@@ -437,5 +326,73 @@ button:disabled {
     margin: 5px 0;
     text-align: center;
     width: 100%;
+  }
+
+  /* --- Hamburger Menu Toggle --- */
+  .menu-toggle {
+    display: flex; /* Flex to center content */
+    align-items: center; /* Vertical centering */
+    justify-content: center; /* Horizontal centering */
+    margin-left: auto;
+    margin-right: 10px;
+    z-index: 100; /* Above other elements */
+    height: 60px; /* Match navbar height */
+  }
+
+  /* Hamburger Icon within the menu toggle */
+  .hamburger {
+    position: relative; /* For absolutely positioned spans */
+    width: 30px;
+    height: 22px;
+    display: block;
+    margin: auto;
+  }
+}
+
+/* --- Hamburger Icon General Styles (applies across breakpoints) --- */
+.hamburger span {
+  display: block;
+  position: absolute;
+  height: 3px;
+  width: 100%;
+  background: #333;
+  border-radius: 3px;
+  transition: transform 0.3s ease, opacity 0.3s ease, top 0.3s ease;
+}
+
+.hamburger span:nth-child(1) {
+  top: 0;
+}
+
+.hamburger span:nth-child(2) {
+  top: 9px;
+}
+
+.hamburger span:nth-child(3) {
+  top: 18px;
+}
+
+.hamburger.open span:nth-child(1) {
+  transform: rotate(45deg);
+  top: 9px;
+}
+
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+  transform: rotate(-45deg);
+  top: 9px;
+}
+
+/* --- Mobile Specific Adjustments for Workout Details --- */
+@media (max-width: 480px) {
+  .workout-details {
+    padding: 15px;
+  }
+
+  .workout-details h4 {
+    padding-right: 30px; /* Make room for the delete button */
   }
 }
