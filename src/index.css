@@ -180,6 +180,26 @@ nav {
   flex-wrap: wrap;
 }
 
+/* For mobile */
+@media (max-width: 767px) {
+  header .container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  nav {
+    margin-top: 15px;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  nav div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
 nav a {
   margin-right: 10px;
   padding: 5px 0;
@@ -242,12 +262,7 @@ form.login {
 }
 
 /* User email display */
-.user-email {
-  word-break: break-all;
-  max-width: 100%;
-  display: inline-block;
-  text-overflow: ellipsis;
-  overflow: hidden;
+nav span {
   margin-right: 10px;
   font-size: 0.9em;
   color: #555;
@@ -273,8 +288,44 @@ button:disabled {
 }
 
 /* Hamburger Menu - only visible on mobile */
+/* Hamburger Menu - only visible on mobile */
 .menu-toggle {
   display: none;
+}
+
+@media (max-width: 767px) {
+  .menu-toggle {
+    display: block;
+    position: relative;
+    margin-left: auto;
+    margin-right: 10px;
+    z-index: 100; /* Ensure it's above other elements */
+    top: 0;
+  }
+
+  header .container {
+    flex-direction: row; /* Keep as row instead of column */
+    justify-content: space-between; /* Space between logo and hamburger */
+    align-items: center; /* Center vertically */
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  nav {
+    flex-basis: 100%; /* Make nav take full width as a new row */
+    order: 3; /* Push it below the header and hamburger */
+    margin-top: 15px;
+    display: none;
+  }
+
+  nav.active {
+    display: block;
+  }
+
+  /* Make sure the hamburger icon is visible */
+  .hamburger {
+    display: block;
+  }
 }
 
 .hamburger {
@@ -319,66 +370,66 @@ button:disabled {
   top: 9px;
 }
 
-/* Mobile Navigation */
+/* Show hamburger on mobile */
+/* Show hamburger on mobile */
 @media (max-width: 767px) {
-  .menu-toggle {
-    display: block;
-    position: relative;
-    margin-left: auto;
-    z-index: 100;
-  }
-  
   header .container {
-    flex-direction: row !important;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
+    flex-direction: column;
+    align-items: flex-start;
     position: relative;
+    padding-bottom: 0;
   }
-  
-  .hamburger {
-    display: block;
-    margin-top: 0;
-  }
-  
+
   nav {
     display: none;
     width: 100%;
-    flex-basis: 100%;
-    order: 3;
     margin-top: 15px;
     background-color: #fff;
     padding: 10px 0;
-    box-shadow: 0 5px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
   }
-  
+
   nav.active {
     display: flex;
     flex-direction: column;
   }
-  
+
   nav div {
     display: flex;
     flex-direction: column;
     width: 100%;
     align-items: center;
   }
-  
+
   .user-email {
+    display: block;
     text-align: center;
     width: 100%;
     margin-bottom: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
     font-size: 0.85em;
     padding: 0 10px;
+    word-break: break-all;
   }
-  
+
+  .user-email {
+    word-break: break-all;
+    max-width: 100%;
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
   .logout-btn {
     margin: 8px auto !important;
     display: block;
     width: auto;
     min-width: 100px;
   }
-  
+
   nav a,
   nav button {
     margin: 5px 0;
