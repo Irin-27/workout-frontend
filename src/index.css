@@ -324,14 +324,12 @@ button:disabled {
 
   /* Make sure the hamburger icon is visible */
   .hamburger {
+    position: relative; /* Added for proper absolute positioning of spans */
+    width: 30px;
+    height: 22px;
     display: block;
+    margin: auto;
   }
-}
-
-.hamburger {
-  width: 30px;
-  height: 22px;
-  position: relative;
 }
 
 .hamburger span {
@@ -341,7 +339,7 @@ button:disabled {
   width: 100%;
   background: #333;
   border-radius: 3px;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease, top 0.3s ease; /* Added top transition */
 }
 
 .hamburger span:nth-child(1) {
