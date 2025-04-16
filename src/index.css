@@ -288,9 +288,24 @@ button:disabled {
 }
 
 /* Hamburger Menu - only visible on mobile */
+/* Hamburger Menu - only visible on mobile */
 .menu-toggle {
   display: none;
-  cursor: pointer;
+}
+
+@media (max-width: 767px) {
+  .menu-toggle {
+    display: block;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100; /* Ensure it's above other elements */
+  }
+
+  /* Make sure the hamburger icon is visible */
+  .hamburger {
+    display: block;
+  }
 }
 
 .hamburger {
@@ -336,18 +351,22 @@ button:disabled {
 }
 
 /* Show hamburger on mobile */
+/* Show hamburger on mobile */
 @media (max-width: 767px) {
-  .menu-toggle {
-    display: block;
-    position: absolute;
-    top: 20px;
-    right: 20px;
+  header .container {
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    padding-bottom: 0;
   }
 
   nav {
     display: none;
     width: 100%;
     margin-top: 15px;
+    background-color: #fff;
+    padding: 10px 0;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
   }
 
   nav.active {
@@ -359,6 +378,36 @@ button:disabled {
     display: flex;
     flex-direction: column;
     width: 100%;
+    align-items: center;
+  }
+
+  .user-email {
+    display: block;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+    font-size: 0.85em;
+    padding: 0 10px;
+    word-break: break-all;
+  }
+
+  .user-email {
+    word-break: break-all;
+    max-width: 100%;
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .logout-btn {
+    margin: 8px auto !important;
+    display: block;
+    width: auto;
+    min-width: 100px;
   }
 
   nav a,
@@ -366,10 +415,5 @@ button:disabled {
     margin: 5px 0;
     text-align: center;
     width: 100%;
-  }
-
-  .user-email {
-    text-align: center;
-    margin-bottom: 10px;
   }
 }
