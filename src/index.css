@@ -1,19 +1,27 @@
 /* google font */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;800&family=VT323&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;800&family=VT323&display=swap");
 
 /* layout */
 :root {
   --primary: #1aac83;
   --error: #e7195a;
 }
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   background: #f1f1f1;
   margin: 0;
-  font-family: "Poppins";
+  font-family: "Poppins", sans-serif;
 }
+
 header {
   background: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
 header .container {
   max-width: 1400px;
   margin: 0 auto;
@@ -21,41 +29,71 @@ header .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
+
 header a {
   color: #333;
   text-decoration: none;
 }
-.pages{
+
+.pages {
   max-width: 1400px;
   padding: 20px;
   margin: 0 auto;
+  min-height: calc(100vh - 160px); /* Account for header and footer */
 }
 
 /* homepage */
 .home {
   display: grid;
-  grid-template-columns: 3fr 1fr;
-  gap: 100px;
+  grid-template-columns: 1fr;
+  gap: 30px;
 }
+
+/* For tablet and larger screens */
+@media (min-width: 768px) {
+  .home {
+    grid-template-columns: 3fr 1fr;
+    gap: 50px;
+  }
+}
+
+/* For large screens */
+@media (min-width: 1200px) {
+  .home {
+    grid-template-columns: 3fr 1fr;
+    gap: 100px;
+  }
+}
+
 .workout-details {
   background: #fff;
-  border-radius: 4px;
+  border-radius: 8px;
   margin: 20px auto;
   padding: 20px;
   position: relative;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
 }
+
+.workout-details:hover {
+  transform: translateY(-3px);
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+}
+
 .workout-details h4 {
   margin: 0 0 10px 0;
   font-size: 1.2em;
   color: var(--primary);
 }
+
 .workout-details p {
   margin: 0;
   font-size: 0.9em;
   color: #555;
 }
+
 .workout-details span {
   position: absolute;
   top: 20px;
@@ -65,30 +103,51 @@ header a {
   padding: 6px;
   border-radius: 50%;
   color: #333;
+  transition: background 0.3s ease;
+}
+
+.workout-details span:hover {
+  background: #e0e0e0;
 }
 
 /* new workout form */
-label, input {
+label,
+input {
   display: block;
 }
+
 input {
-  padding: 10px;
+  padding: 12px;
   margin-top: 10px;
   margin-bottom: 20px;
   width: 100%;
   border: 1px solid #ddd;
   border-radius: 4px;
   box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
+
+input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(26, 172, 131, 0.2);
+}
+
 form button {
   background: var(--primary);
   border: 0;
   color: #fff;
-  padding: 10px;
-  font-family: "Poppins";
+  padding: 12px 16px;
+  font-family: "Poppins", sans-serif;
   border-radius: 4px;
   cursor: pointer;
+  transition: background 0.3s ease;
 }
+
+form button:hover {
+  background: #158f6d;
+}
+
 div.error {
   padding: 10px;
   background: #ffefef;
@@ -97,6 +156,7 @@ div.error {
   border-radius: 4px;
   margin: 20px 0;
 }
+
 input.error {
   border: 1px solid var(--error);
 }
@@ -104,39 +164,212 @@ input.error {
 footer {
   text-align: center;
   margin: 40px auto 0;
-  padding: 20px 0;
+  padding: 20px;
   font-size: 0.9em;
-  color: #4A4A4A;
+  color: #4a4a4a;
   border-top: 1px solid #ddd;
+  width: 100%;
+  background: #fff;
+}
+
+/* navbar */
+nav {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+/* For mobile */
+@media (max-width: 767px) {
+  header .container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  nav {
+    margin-top: 15px;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  nav div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+nav a {
+  margin-right: 10px;
+  padding: 5px 0;
+  font-weight: 500;
+  position: relative;
+}
+
+nav a:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--primary);
+  transition: width 0.3s ease;
+}
+
+nav a:hover:after {
   width: 100%;
 }
 
-/*navbar*/
-nav{
-  display : flex;
-  align-items: center;
-}
-nav a{
-  margin-right: 10px;
-}
-
-nav button{
-  background:#fff;
-  color:var(--primary);
-  border:2px solid var(--primary);
-  padding:6px 10px;
-  border-radius:4px;
-  cursor:pointer;
-  font-family:"Poppins";
+nav button {
+  background: #fff;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
   font-size: 1em;
   margin-left: 10px;
+  transition: all 0.3s ease;
 }
 
-/*auth forms*/
-form.signup,form.login{
+nav button:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* auth forms */
+form.signup,
+form.login {
   max-width: 400px;
   margin: 40px auto;
   padding: 20px;
   background: #fff;
-  border-radius: 4px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive form for smaller screens */
+@media (max-width: 480px) {
+  form.signup,
+  form.login {
+    width: 100%;
+    margin: 20px auto;
+    padding: 15px;
+  }
+}
+
+/* User email display */
+nav span {
+  margin-right: 10px;
+  font-size: 0.9em;
+  color: #555;
+}
+
+/* Loading state for buttons */
+button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  border-color: #cccccc;
+  color: #666;
+}
+
+/* Mobile Specific Adjustments */
+@media (max-width: 480px) {
+  .workout-details {
+    padding: 15px;
+  }
+
+  .workout-details h4 {
+    padding-right: 30px; /* Make room for the delete button */
+  }
+}
+
+/* Hamburger Menu - only visible on mobile */
+.menu-toggle {
+  display: none;
+  cursor: pointer;
+}
+
+.hamburger {
+  width: 30px;
+  height: 22px;
+  position: relative;
+}
+
+.hamburger span {
+  display: block;
+  position: absolute;
+  height: 3px;
+  width: 100%;
+  background: #333;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.hamburger span:nth-child(1) {
+  top: 0;
+}
+
+.hamburger span:nth-child(2) {
+  top: 9px;
+}
+
+.hamburger span:nth-child(3) {
+  top: 18px;
+}
+
+.hamburger.open span:nth-child(1) {
+  transform: rotate(45deg);
+  top: 9px;
+}
+
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+  transform: rotate(-45deg);
+  top: 9px;
+}
+
+/* Show hamburger on mobile */
+@media (max-width: 767px) {
+  .menu-toggle {
+    display: block;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+
+  nav {
+    display: none;
+    width: 100%;
+    margin-top: 15px;
+  }
+
+  nav.active {
+    display: flex;
+    flex-direction: column;
+  }
+
+  nav div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  nav a,
+  nav button {
+    margin: 5px 0;
+    text-align: center;
+    width: 100%;
+  }
+
+  .user-email {
+    text-align: center;
+    margin-bottom: 10px;
+  }
 }
