@@ -3,13 +3,13 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthContext } from './hooks/useAuthContext';
 
 // pages & components
-import Dashboard from './pages/Dashboard';
-import Home from './pages/Home';
-import Signup from './pages/Signup';
-import Login from './pages/Login';
-import UserProfile from './pages/UserProfile';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import Dashboard from '../src/components/Dashboard';
+import Home from '../src/pages/Home';
+import Signup from '../src/pages/Signup';
+import Login from '../src/pages/Login';
+import UserProfile from '../src/pages/UserProfile';
+import Navbar from '../src/components/Navbar';
+import Footer from '../src/components/Footer';
 
 function App() {
   const { user } = useAuthContext();
