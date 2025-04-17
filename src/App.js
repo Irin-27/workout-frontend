@@ -1,14 +1,19 @@
 import React from "react";
-import { BrowserRouter, Routes, Route , Navigate} from 'react-router-dom'
-import { useAuthContext } from './hooks/useAuthContext'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useAuthContext } from './hooks/useAuthContext';
+
 // pages & components
-import Home from './pages/Home'
-import Signup from './pages/Signup'
-import Login from './pages/Login'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
+import Dashboard from './pages/Dashboard';
+import Home from './pages/Home';
+import Signup from './pages/Signup';
+import Login from './pages/Login';
+import UserProfile from './pages/UserProfile';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+
 function App() {
-  const {user}=useAuthContext()
+  const { user } = useAuthContext();
+  
   return (
     <div className="App">
       <BrowserRouter>
@@ -17,23 +22,30 @@ function App() {
           <Routes>
             <Route 
               path="/" 
-              element={user ? <Home />:<Navigate to="/login"/>} 
+              element={user ? <Dashboard /> : <Navigate to="/login" />} 
+            />
+            <Route 
+              path="/workouts" 
+              element={user ? <Home /> : <Navigate to="/login" />} 
+            />
+            <Route 
+              path="/profile" 
+              element={user ? <UserProfile /> : <Navigate to="/login" />} 
             />
             <Route 
               path="/login" 
-              element={!user ? <Login />: <Navigate to="/"/>} 
+              element={!user ? <Login /> : <Navigate to="/" />} 
             />
             <Route 
               path="/signup" 
-              element={!user ? <Signup />: <Navigate to="/"/>} 
+              element={!user ? <Signup /> : <Navigate to="/" />} 
             />
           </Routes>
         </div>
-        <Footer/>
+        <Footer />
       </BrowserRouter>
     </div>
   );
 }
 
 export default App;
-

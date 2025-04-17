@@ -1,84 +1,163 @@
-import React from "react";
-import { useState } from "react"
-import { useWorkoutsContext } from "../hooks/useWorkoutsContext"
-import { useAuthContext } from '../hooks/useAuthContext'
+import React, { useState } from "react";
+import { useWorkoutsContext } from "../hooks/useWorkoutsContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const WorkoutForm = () => {
-  const { dispatch } = useWorkoutsContext()
-  const { user } = useAuthContext()
+  const { dispatch } = useWorkoutsContext();
+  const { user } = useAuthContext();
 
-  const [title, setTitle] = useState('')
-  const [load, setLoad] = useState('')
-  const [reps, setReps] = useState('')
-  const [error, setError] = useState(null)
-  const [emptyFields, setEmptyFields] = useState([])
+  const [title, setTitle] = useState("");
+  const [load, setLoad] = useState("");
+  const [reps, setReps] = useState("");
+  const [category, setCategory] = useState("strength");
+  const [duration, setDuration] = useState("");
+  const [notes, setNotes] = useState("");
+  const [error, setError] = useState(null);
+  const [emptyFields, setEmptyFields] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!user) {
-      setError('You must be logged in')
-      return
+      setError("You must be logged in");
+      return;
     }
 
-    const workout = {title, load, reps}
+    // Basic required fields
+    const workout = { 
+      title, 
+      load, 
+      reps,
+      category 
+    };
+    
+    // Add optional fields if they're filled in
+    if (duration) workout.duration = duration;
+    if (notes) workout.notes = notes;
 
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/workouts`, {
-      method: 'POST',
-      body: JSON.stringify(workout),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${user.token}`
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/workouts`, {
+        method: "POST",
+        body: JSON.stringify(workout),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${user.token}`
+        }
+      });
+
+      const json = await response.json();
+
+      if (!response.ok) {
+        setError(json.error);
+        setEmptyFields(json.emptyFields || []);
+      } else {
+        // Reset form
+        setTitle("");
+        setLoad("");
+        setReps("");
+        setCategory("strength");
+        setDuration("");
+        setNotes("");
+        setError(null);
+        setEmptyFields([]);
+        setShowAdvanced(false);
+        
+        // Update context
+        dispatch({ type: "CREATE_WORKOUT", payload: json });
       }
-    })
-    const json = await response.json()
+    } catch (err) {
+      setError("Failed to add workout. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-    if (!response.ok) {
-      setError(json.error)
-      setEmptyFields(json.emptyFields)
-    }
-    if (response.ok) {
-      setTitle('')
-      setLoad('')
-      setReps('')
-      setError(null)
-      setEmptyFields([])
-      dispatch({type: 'CREATE_WORKOUT', payload: json})
-    }
-  }
+  const toggleAdvanced = () => {
+    setShowAdvanced(!showAdvanced);
+  };
 
   return (
-    <form className="create" onSubmit={handleSubmit}>
+    <form className="create workout-form" onSubmit={handleSubmit}>
       <h3>Add a New Workout</h3>
 
-      <label>Excersize Title:</label>
-      <input 
+      <label>Exercise Title:</label>
+      <input
         type="text"
         onChange={(e) => setTitle(e.target.value)}
         value={title}
-        className={emptyFields.includes('title') ? 'error' : ''}
+        className={emptyFields.includes("title") ? "error" : ""}
+        placeholder="e.g. Bench Press"
       />
 
-      <label>Load (in kg):</label>
-      <input 
+      <label>Category:</label>
+      <select
+        onChange={(e) => setCategory(e.target.value)}
+        value={category}
+      >
+        <option value="strength">Strength Training</option>
+        <option value="cardio">Cardio</option>
+        <option value="flexibility">Flexibility</option>
+        <option value="balance">Balance</option>
+        <option value="hiit">HIIT</option>
+      </select>
+
+      <label>Load (kg):</label>
+      <input
         type="number"
         onChange={(e) => setLoad(e.target.value)}
         value={load}
-        className={emptyFields.includes('load') ? 'error' : ''}
+        className={emptyFields.includes("load") ? "error" : ""}
       />
 
       <label>Reps:</label>
-      <input 
+      <input
         type="number"
         onChange={(e) => setReps(e.target.value)}
         value={reps}
-        className={emptyFields.includes('reps') ? 'error' : ''}
+        className={emptyFields.includes("reps") ? "error" : ""}
       />
 
-      <button>Add Workout</button>
+      <button 
+        type="button" 
+        className="toggle-advanced"
+        onClick={toggleAdvanced}
+      >
+        {showAdvanced ? "Hide Advanced Options" : "Show Advanced Options"}
+      </button>
+
+      {showAdvanced && (
+        <div className="advanced-options">
+          <label>Duration (minutes):</label>
+          <input
+            type="number"
+            onChange={(e) => setDuration(e.target.value)}
+            value={duration}
+            placeholder="Optional"
+          />
+
+          <label>Notes:</label>
+          <textarea
+            onChange={(e) => setNotes(e.target.value)}
+            value={notes}
+            placeholder="Any additional details about your workout"
+          ></textarea>
+        </div>
+      )}
+
+      <button 
+        className="submit-button" 
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? "Adding..." : "Add Workout"}
+      </button>
+      
       {error && <div className="error">{error}</div>}
     </form>
-  )
-}
+  );
+};
 
-export default WorkoutForm
+export default WorkoutForm;
