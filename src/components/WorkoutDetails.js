@@ -14,21 +14,31 @@ const WorkoutDetails = ({ workout }) => {
       return
     }
 
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/workouts/${workout._id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${user.token}`
-      }
-    })
-    const json = await response.json()
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/workouts/${workout._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${user.token}`
+        }
+      })
 
-    if (response.ok) {
-      dispatch({type: 'DELETE_WORKOUT', payload: json})
+      if (response.ok) {
+        // Immediately update the UI by dispatching the delete action
+        dispatch({ type: 'DELETE_WORKOUT', payload: workout })
+      } else {
+        console.error('Failed to delete workout:', response.status)
+        // You could add error handling here, like showing a toast notification
+      }
+    } catch (error) {
+      console.error('Error deleting workout:', error)
+      // You could add error handling here
     }
   }
 
-  // Calculate total weight
-  const totalWeight = workout.load * workout.reps
+  // Calculate total weight with proper number handling
+  const load = parseFloat(workout.load) || 0
+  const reps = parseInt(workout.reps) || 0
+  const totalWeight = load * reps
 
   return (
     <div className="workout-details">
@@ -37,11 +47,11 @@ const WorkoutDetails = ({ workout }) => {
       
       <div className="workout-meta">
         <div className="workout-stat">
-          <div className="workout-stat-value">{workout.load}</div>
+          <div className="workout-stat-value">{load}</div>
           <div className="workout-stat-label">kg</div>
         </div>
         <div className="workout-stat">
-          <div className="workout-stat-value">{workout.reps}</div>
+          <div className="workout-stat-value">{reps}</div>
           <div className="workout-stat-label">reps</div>
         </div>
         <div className="workout-stat">

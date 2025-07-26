@@ -8,8 +8,8 @@ import WorkoutDetails from '../components/WorkoutDetails'
 import WorkoutForm from '../components/WorkoutForm'
 
 const Home = () => {
-  const {workouts, dispatch} = useWorkoutsContext()
-  const {user} = useAuthContext()
+  const { workouts, dispatch } = useWorkoutsContext()
+  const { user } = useAuthContext()
 
   useEffect(() => {
     const fetchWorkouts = async () => {
@@ -19,13 +19,17 @@ const Home = () => {
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/workouts`, {
           headers: {'Authorization': `Bearer ${user.token}`},
         })
-        const json = await response.json()
-
+        
         if (response.ok) {
-          dispatch({type: 'SET_WORKOUTS', payload: json})
+          const json = await response.json()
+          dispatch({ type: 'SET_WORKOUTS', payload: json })
+        } else {
+          console.error('Failed to fetch workouts:', response.status)
+          // Don't clear workouts on error - keep existing state
         }
       } catch (error) {
         console.error('Error fetching workouts:', error)
+        // Don't clear workouts on error - keep existing state
       }
     }
 
@@ -34,7 +38,7 @@ const Home = () => {
     }
   }, [dispatch, user])
 
-  // Calculate statistics
+  // Calculate statistics - handle both null and empty array cases
   const stats = useMemo(() => {
     if (!workouts || workouts.length === 0) {
       return {
@@ -46,17 +50,26 @@ const Home = () => {
     }
 
     const totalWorkouts = workouts.length
-    const totalWeight = workouts.reduce((sum, workout) => sum + (workout.load * workout.reps), 0)
-    const totalReps = workouts.reduce((sum, workout) => sum + workout.reps, 0)
-    const avgWeight = Math.round(totalWeight / totalWorkouts)
+    const totalWeight = workouts.reduce((sum, workout) => {
+      const load = parseFloat(workout.load) || 0
+      const reps = parseInt(workout.reps) || 0
+      return sum + (load * reps)
+    }, 0)
+    const totalReps = workouts.reduce((sum, workout) => {
+      return sum + (parseInt(workout.reps) || 0)
+    }, 0)
+    const avgWeight = totalWorkouts > 0 ? Math.round(totalWeight / totalWorkouts) : 0
 
     return {
       totalWorkouts,
-      totalWeight,
+      totalWeight: Math.round(totalWeight),
       totalReps,
       avgWeight
     }
   }, [workouts])
+
+  // Ensure workouts is always an array for rendering
+  const workoutsList = workouts || []
 
   return (
     <div>
@@ -89,8 +102,8 @@ const Home = () => {
             <h2 className="workouts-title">Recent Workouts</h2>
           </div>
           <div className="workouts-list">
-            {workouts && workouts.length > 0 ? (
-              workouts.map((workout) => (
+            {workoutsList.length > 0 ? (
+              workoutsList.map((workout) => (
                 <WorkoutDetails key={workout._id} workout={workout} />
               ))
             ) : (

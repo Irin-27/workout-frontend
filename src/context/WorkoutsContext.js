@@ -10,12 +10,18 @@ export const workoutsReducer = (state, action) => {
         workouts: action.payload
       }
     case 'CREATE_WORKOUT':
+      // Ensure we always have an array and add the new workout at the beginning
+      const currentWorkouts = state.workouts || []
       return {
-        workouts: [action.payload, ...(state.workouts || [])]
+        workouts: [action.payload, ...currentWorkouts]
       }
     case 'DELETE_WORKOUT':
+      // Ensure we have workouts before filtering
+      if (!state.workouts) {
+        return state
+      }
       return {
-        workouts: state.workouts ? state.workouts.filter((w) => w._id !== action.payload._id) : []
+        workouts: state.workouts.filter((w) => w._id !== action.payload._id)
       }
     default:
       return state
@@ -24,7 +30,7 @@ export const workoutsReducer = (state, action) => {
 
 export const WorkoutsContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(workoutsReducer, {
-    workouts: null
+    workouts: []  // Initialize as empty array instead of null
   })
 
   console.log('WorkoutsContext state:', state)

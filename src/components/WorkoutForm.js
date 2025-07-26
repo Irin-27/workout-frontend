@@ -18,6 +18,7 @@ const WorkoutForm = () => {
     e.preventDefault()
     setIsLoading(true)
     setError(null)
+    setEmptyFields([])
 
     if (!user) {
       setError('You must be logged in')
@@ -25,7 +26,24 @@ const WorkoutForm = () => {
       return
     }
 
-    const workout = {title, load, reps}
+    // Client-side validation
+    const fields = []
+    if (!title.trim()) fields.push('title')
+    if (!load.trim()) fields.push('load')
+    if (!reps.trim()) fields.push('reps')
+
+    if (fields.length > 0) {
+      setEmptyFields(fields)
+      setError('Please fill in all fields')
+      setIsLoading(false)
+      return
+    }
+
+    const workout = {
+      title: title.trim(),
+      load: parseFloat(load),
+      reps: parseInt(reps)
+    }
 
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/workouts`, {
@@ -36,19 +54,22 @@ const WorkoutForm = () => {
           'Authorization': `Bearer ${user.token}`
         }
       })
+      
       const json = await response.json()
 
       if (!response.ok) {
-        setError(json.error)
+        setError(json.error || 'Failed to add workout')
         setEmptyFields(json.emptyFields || [])
       } else {
-        // Success - clear form and update context
+        // Success - immediately update context with the returned workout
+        dispatch({ type: 'CREATE_WORKOUT', payload: json })
+        
+        // Clear form
         setTitle('')
         setLoad('')
         setReps('')
         setError(null)
         setEmptyFields([])
-        dispatch({type: 'CREATE_WORKOUT', payload: json})
         
         // Show success feedback
         const button = e.target.querySelector('button[type="submit"]')
@@ -57,14 +78,16 @@ const WorkoutForm = () => {
           button.textContent = 'Added! 💪'
           button.style.background = 'var(--success)'
           setTimeout(() => {
-            button.textContent = originalText
-            button.style.background = 'var(--gradient-primary)'
+            if (button) {
+              button.textContent = originalText
+              button.style.background = 'var(--gradient-primary)'
+            }
           }, 2000)
         }
       }
     } catch (error) {
       console.error('Error adding workout:', error)
-      setError('Failed to add workout. Please try again.')
+      setError('Failed to add workout. Please check your connection and try again.')
     } finally {
       setIsLoading(false)
     }
