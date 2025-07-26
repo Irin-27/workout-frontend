@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useMemo }from 'react'
+import { useEffect, useMemo } from 'react'
 import { useWorkoutsContext } from "../hooks/useWorkoutsContext"
 import { useAuthContext } from "../hooks/useAuthContext"
 
@@ -13,13 +13,19 @@ const Home = () => {
 
   useEffect(() => {
     const fetchWorkouts = async () => {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/workouts`, {
-        headers: {'Authorization': `Bearer ${user.token}`},
-      })
-      const json = await response.json()
+      if (!user) return;
+      
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/workouts`, {
+          headers: {'Authorization': `Bearer ${user.token}`},
+        })
+        const json = await response.json()
 
-      if (response.ok) {
-        dispatch({type: 'SET_WORKOUTS', payload: json})
+        if (response.ok) {
+          dispatch({type: 'SET_WORKOUTS', payload: json})
+        }
+      } catch (error) {
+        console.error('Error fetching workouts:', error)
       }
     }
 

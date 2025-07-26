@@ -17,6 +17,7 @@ const WorkoutForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
+    setError(null)
 
     if (!user) {
       setError('You must be logged in')
@@ -26,39 +27,46 @@ const WorkoutForm = () => {
 
     const workout = {title, load, reps}
 
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/workouts`, {
-      method: 'POST',
-      body: JSON.stringify(workout),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${user.token}`
-      }
-    })
-    const json = await response.json()
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/workouts`, {
+        method: 'POST',
+        body: JSON.stringify(workout),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
+        }
+      })
+      const json = await response.json()
 
-    if (!response.ok) {
-      setError(json.error)
-      setEmptyFields(json.emptyFields)
+      if (!response.ok) {
+        setError(json.error)
+        setEmptyFields(json.emptyFields || [])
+      } else {
+        // Success - clear form and update context
+        setTitle('')
+        setLoad('')
+        setReps('')
+        setError(null)
+        setEmptyFields([])
+        dispatch({type: 'CREATE_WORKOUT', payload: json})
+        
+        // Show success feedback
+        const button = e.target.querySelector('button[type="submit"]')
+        if (button) {
+          const originalText = button.textContent
+          button.textContent = 'Added! 💪'
+          button.style.background = 'var(--success)'
+          setTimeout(() => {
+            button.textContent = originalText
+            button.style.background = 'var(--gradient-primary)'
+          }, 2000)
+        }
+      }
+    } catch (error) {
+      console.error('Error adding workout:', error)
+      setError('Failed to add workout. Please try again.')
+    } finally {
       setIsLoading(false)
-    }
-    if (response.ok) {
-      setTitle('')
-      setLoad('')
-      setReps('')
-      setError(null)
-      setEmptyFields([])
-      setIsLoading(false)
-      dispatch({type: 'CREATE_WORKOUT', payload: json})
-      
-      // Show success feedback
-      const button = e.target.querySelector('button[type="submit"]')
-      const originalText = button.textContent
-      button.textContent = 'Added! 💪'
-      button.style.background = 'var(--success)'
-      setTimeout(() => {
-        button.textContent = originalText
-        button.style.background = 'var(--gradient-primary)'
-      }, 2000)
     }
   }
 
