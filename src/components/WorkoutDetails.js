@@ -27,12 +27,29 @@ const WorkoutDetails = ({ workout }) => {
     }
   }
 
+  // Calculate total weight
+  const totalWeight = workout.load * workout.reps
+
   return (
     <div className="workout-details">
       <h4>{workout.title}</h4>
-      <p><strong>Load (kg): </strong>{workout.load}</p>
-      <p><strong>Reps: </strong>{workout.reps}</p>
       <p>{formatDistanceToNow(new Date(workout.createdAt), { addSuffix: true })}</p>
+      
+      <div className="workout-meta">
+        <div className="workout-stat">
+          <div className="workout-stat-value">{workout.load}</div>
+          <div className="workout-stat-label">kg</div>
+        </div>
+        <div className="workout-stat">
+          <div className="workout-stat-value">{workout.reps}</div>
+          <div className="workout-stat-label">reps</div>
+        </div>
+        <div className="workout-stat">
+          <div className="workout-stat-value">{totalWeight}</div>
+          <div className="workout-stat-label">total</div>
+        </div>
+      </div>
+      
       <span className="material-symbols-outlined" onClick={handleClick}>delete</span>
     </div>
   )

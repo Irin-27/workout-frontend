@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect }from 'react'
+import { useEffect, useMemo }from 'react'
 import { useWorkoutsContext } from "../hooks/useWorkoutsContext"
 import { useAuthContext } from "../hooks/useAuthContext"
 
@@ -28,14 +28,75 @@ const Home = () => {
     }
   }, [dispatch, user])
 
+  // Calculate statistics
+  const stats = useMemo(() => {
+    if (!workouts || workouts.length === 0) {
+      return {
+        totalWorkouts: 0,
+        totalWeight: 0,
+        totalReps: 0,
+        avgWeight: 0
+      }
+    }
+
+    const totalWorkouts = workouts.length
+    const totalWeight = workouts.reduce((sum, workout) => sum + (workout.load * workout.reps), 0)
+    const totalReps = workouts.reduce((sum, workout) => sum + workout.reps, 0)
+    const avgWeight = Math.round(totalWeight / totalWorkouts)
+
+    return {
+      totalWorkouts,
+      totalWeight,
+      totalReps,
+      avgWeight
+    }
+  }, [workouts])
+
   return (
-    <div className="home">
-      <div className="workouts">
-        {workouts && workouts.map((workout) => (
-          <WorkoutDetails key={workout._id} workout={workout} />
-        ))}
+    <div>
+      {/* Statistics Section */}
+      <div className="stats-section">
+        <div className="stats-grid">
+          <div className="stat-card">
+            <div className="stat-value">{stats.totalWorkouts}</div>
+            <div className="stat-label">Total Workouts</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-value">{stats.totalWeight.toLocaleString()}</div>
+            <div className="stat-label">Total Weight (kg)</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-value">{stats.totalReps}</div>
+            <div className="stat-label">Total Reps</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-value">{stats.avgWeight}</div>
+            <div className="stat-label">Avg Weight (kg)</div>
+          </div>
+        </div>
       </div>
-      <WorkoutForm />
+
+      {/* Main Content */}
+      <div className="home">
+        <div className="workouts-container">
+          <div className="workouts-header">
+            <h2 className="workouts-title">Recent Workouts</h2>
+          </div>
+          <div className="workouts-list">
+            {workouts && workouts.length > 0 ? (
+              workouts.map((workout) => (
+                <WorkoutDetails key={workout._id} workout={workout} />
+              ))
+            ) : (
+              <div className="empty-state">
+                <div className="empty-icon">💪</div>
+                <p>No workouts yet. Add your first workout to get started!</p>
+              </div>
+            )}
+          </div>
+        </div>
+        <WorkoutForm />
+      </div>
     </div>
   )
 }

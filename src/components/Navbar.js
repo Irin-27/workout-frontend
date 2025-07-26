@@ -29,6 +29,16 @@ const Navbar = () => {
     setMenuOpen(!menuOpen)
   }
 
+  // Get user initials for avatar
+  const getUserInitials = (email) => {
+    if (!email) return 'U'
+    const parts = email.split('@')[0].split('.')
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase()
+    }
+    return email.substring(0, 2).toUpperCase()
+  }
+
   return (
     <header>
       <div className="container">
@@ -36,7 +46,7 @@ const Navbar = () => {
           <h1>FitOrbit</h1>   
         </Link>
         
-        {/* Only show hamburger on mobile */}
+        {/* Mobile menu toggle */}
         {isMobile && (
           <div className="menu-toggle" onClick={toggleMenu}>
             <div className={`hamburger ${menuOpen ? 'open' : ''}`}>
@@ -47,16 +57,28 @@ const Navbar = () => {
           </div>
         )}
         
-        <nav className={menuOpen ? 'active' : ''}>
+        <nav className={menuOpen || !isMobile ? 'active' : ''}>
           {user && (
-            <div>
-              <span className="user-email">{user.email}</span>
-              <button onClick={handleClick} className="logout-btn">Log out</button>
+            <div className="nav-user">
+              {!isMobile && (
+                <div className="user-info">
+                  <div className="avatar">
+                    {getUserInitials(user.email)}
+                  </div>
+                  <span className="user-email">{user.email}</span>
+                </div>
+              )}
+              {isMobile && (
+                <span className="user-email">{user.email}</span>
+              )}
+              <button onClick={handleClick} className="logout-btn">
+                {isMobile ? 'Log out' : '↗'}
+              </button>
             </div>
           )}
 
           {!user && (
-            <div>
+            <div className="nav-links">
               <Link to="/login" onClick={() => setMenuOpen(false)}>Log in</Link>
               <Link to="/signup" onClick={() => setMenuOpen(false)}>Sign up</Link>
             </div>
