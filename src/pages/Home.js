@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useWorkoutsContext } from "../hooks/useWorkoutsContext"
 import { useAuthContext } from "../hooks/useAuthContext"
 
@@ -10,12 +10,17 @@ import WorkoutForm from '../components/WorkoutForm'
 const Home = () => {
   const { workouts, dispatch } = useWorkoutsContext()
   const { user } = useAuthContext()
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchWorkouts = async () => {
-      if (!user) return;
+      if (!user) {
+        setIsLoading(false)
+        return;
+      }
       
       try {
+        setIsLoading(true)
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/workouts`, {
           headers: {'Authorization': `Bearer ${user.token}`},
         })
@@ -24,18 +29,23 @@ const Home = () => {
           const json = await response.json()
           dispatch({ type: 'SET_WORKOUTS', payload: json })
         } else {
-          console.error('Failed to fetch workouts:', response.status)
-          // Don't clear workouts on error - keep existing state
+          console.error('Failed to fetch workouts:', response.status, response.statusText)
+          if (response.status === 503) {
+            console.log('Backend is hibernating, initializing with empty array')
+          }
+          // Set empty array if fetch fails
+          dispatch({ type: 'SET_WORKOUTS', payload: [] })
         }
       } catch (error) {
         console.error('Error fetching workouts:', error)
-        // Don't clear workouts on error - keep existing state
+        // Set empty array if error occurs
+        dispatch({ type: 'SET_WORKOUTS', payload: [] })
+      } finally {
+        setIsLoading(false)
       }
     }
 
-    if (user) {
-      fetchWorkouts()
-    }
+    fetchWorkouts()
   }, [dispatch, user])
 
   // Calculate statistics - handle both null and empty array cases
@@ -70,6 +80,18 @@ const Home = () => {
 
   // Ensure workouts is always an array for rendering
   const workoutsList = workouts || []
+
+  // Show loading state while fetching workouts
+  if (isLoading && workouts === null) {
+    return (
+      <div className="home">
+        <div className="loading-container">
+          <div className="loading"></div>
+          <p>Loading workouts...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div>

@@ -54,14 +54,23 @@ const WorkoutForm = () => {
           'Authorization': `Bearer ${user.token}`
         }
       })
-      
-      const json = await response.json()
 
       if (!response.ok) {
-        setError(json.error || 'Failed to add workout')
-        setEmptyFields(json.emptyFields || [])
+        if (response.status === 503) {
+          setError('Backend is starting up. Please wait a moment and try again.')
+        } else {
+          try {
+            const json = await response.json()
+            setError(json.error || 'Failed to add workout')
+            setEmptyFields(json.emptyFields || [])
+          } catch (e) {
+            setError(`Failed to add workout (${response.status})`)
+          }
+        }
       } else {
+        const json = await response.json()
         // Success - immediately update context with the returned workout
+        console.log('Adding workout to context:', json)
         dispatch({ type: 'CREATE_WORKOUT', payload: json })
         
         // Clear form
@@ -87,7 +96,11 @@ const WorkoutForm = () => {
       }
     } catch (error) {
       console.error('Error adding workout:', error)
-      setError('Failed to add workout. Please check your connection and try again.')
+      if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+        setError('Cannot connect to server. Please check your internet connection.')
+      } else {
+        setError('Failed to add workout. Please check your connection and try again.')
+      }
     } finally {
       setIsLoading(false)
     }
